@@ -1,0 +1,1 @@
+Git Repository der Gruppe Skyware für die Vorlesung NOSQL
