@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
+/* GET player listing. */
 router.get('/list', function(req, res) {
     var db = req.db;
-    var collection = db.get('userlist');
+    var collection = db.get('players');
     collection.find({},{},function(e,docs){
         res.json(docs);
     });
@@ -13,13 +13,13 @@ router.get('/list', function(req, res) {
 // Database 1
 router.get('/fillDB', function(req, res){
     var mongo = require('mongodb').MongoClient;
-    mongo.connect('mongodb://localhost:27017/players', function(err, db){
+    mongo.connect('mongodb://localhost:27017/fussballApp', function(err, db){
         console.log("Connected properly.");
         var col = db.collection('players');
         col.insert(
                 [
-                    {name:"Marc",score:37},
-                    {name:"Chris",score:20}
+                    {name:"Misoch", vorname:"Marc",score:37},
+                    {name:"Denneberg", vorname:"Chris",score:20}
                 ],
                     function(err,data){
                         //handle error
@@ -27,6 +27,7 @@ router.get('/fillDB', function(req, res){
                 );
         db.close();
     });
+    console.log('Erfolgreich eingefügt');
     res.send('Erfolg! DB gefüllt.');
 });
 

@@ -11,14 +11,19 @@ html
             script(src='/javascripts/global.js')
             h1= title
             p Welcome to our test
+            
+
             // USER LIST
             h2 User List
             #playertable
                 table
                     thead
                         th Name
+                        th Vorname
                         th Tore
                     tbody
+                    
+            button(type='button', onclick="window.location.href='/teams'") Teams 
             // /USER LIST
 
         
