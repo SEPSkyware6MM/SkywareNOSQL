@@ -1,7 +1,18 @@
 $(document).ready(function() {
     populateTable();
-
 });
+
+function showteamdetails(shortname)
+{
+    $.ajax({
+        url: "/teams/" + shortname,
+        type: "GET",
+        dataType: 'json'
+    }).done(function(data){
+        var players = data[0].players;
+
+    });;
+}
 
 // Fill table with data
 function populateTable() {
@@ -16,7 +27,7 @@ function populateTable() {
         $.each(data, function(){
             tableContent += '<tr>';
             tableContent += '<td><img src="' + this.icon + '"></td>';
-            tableContent += '<td>' + this.teamname + '</td>';
+            tableContent += '<td onclick=showteamdetails(' + "'" + this.shortname + "'" +')>' + this.teamname + '</td>';
             tableContent += '</tr>';
         });
 
