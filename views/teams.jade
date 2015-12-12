@@ -9,16 +9,30 @@ html
         block content
             script(src='/javascripts/jquery2.1.4.js')
             script(src='/javascripts/teamsJS.js')
+            a(class='button', href='/teams/write/fillDB') FillDBWithTeams
+            button(onclick='populateTable(1)') Liga 1
+            button(onclick='populateTable(2)') Liga 2
             h1= title
-            p Welcome to our test
             // USER LIST
-            h2 User List
-            #teamtable
-                table
-                    thead
-                        th Icon
-                        th Teamname
-                    tbody
+            #teamTableWithHeader
+                h2 Tabelle 
+                #teamtable
+                    table
+                        thead
+                            th Icon
+                            th Teamname
+                            th Punkte
+                        tbody
+            #playerTableWithHeader
+                h2 Spieler
+                #playertable
+                    table
+                        thead 
+                            th Vorname
+                            th Nachname
+                            th Tore
+                        tbody
+                    
             // /USER LIST
 
    
