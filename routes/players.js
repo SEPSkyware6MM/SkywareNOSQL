@@ -9,6 +9,29 @@ router.get('/list', function(req, res) {
         res.json(docs);
     });
 });
+ 
+ //Für Testzwecke hier wird erst die team id von meier geholt, und danach in allen teams geschaut die diese nummer als punktzalh haben
+ //proof of concept für zb erst spiele holen und danach die manschaften die darin gespielt haben
+router.get('/test', function(req,res)
+{
+    var db = req.db;
+    var testteamid;
+    var team;
+    var collection = db.get('players');
+    collection.find({name: "Meier"}, function(err, cursor){
+        testteamid = cursor[0].teamid;
+        team = getTeam(testteamid, req, res);
+    });
+});
+
+function getTeam(testteamid, req, res)
+{
+    var db = req.db;
+    var collection = db.get('teams');
+    collection.find({points: testteamid}, function(err, teams){
+        res.json(teams);
+    });
+}
 
 // Database 1
 router.get('/write/fillDB', function(req, res){

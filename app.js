@@ -5,8 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
-var players = require('./routes/players');
+//var players = require('./routes/players');
 var teams = require('./routes/teams');
+var games = require('./routes/games');
 var app = express();
 var mongo = require('mongodb');
 var monk = require('monk');
@@ -32,8 +33,9 @@ app.use(function(req,res,next){
 });
 
 app.use('/', routes);
-app.use('/players', players);
+//app.use('/players', players);
 app.use('/teams', teams);
+app.use('/games', games);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
