@@ -40,7 +40,9 @@ function fillDatabaseWithRandomGames(arrayWithTeams)
         {
             col.insert(
                     [
-                        {matchday: i,
+                        {
+                            matchday: i,
+                            played: 0,
                             games: getGamesJson(arrayWithTeams, i)
                         }
 
@@ -138,7 +140,7 @@ function updateGames(everyMatchdayGames, req, res)
     while (i < 34 && !matchDayFound)
     {
         //Er wird geschaut welcher SPieltag als nächstes eingetragen werden muss
-        if (gamesOrderedByMatchday[i].games[0].goalsTeam1 === -1)
+        if (gamesOrderedByMatchday[i].played === 0)
         {
             actualMatchDay = gamesOrderedByMatchday[i].matchday;
             matchDayFound = true;
@@ -149,26 +151,42 @@ function updateGames(everyMatchdayGames, req, res)
     var db = req.db;
     var collection = db.get('games');
     
-    collection.update({ matchday: actualMatchDay }, { "$set": { 
-            "games.0.goalsTeam1": getRandomResult(),
-            "games.0.goalsTeam2": getRandomResult(),
-            "games.1.goalsTeam1": getRandomResult(),
-            "games.1.goalsTeam2": getRandomResult(),
-            "games.2.goalsTeam1": getRandomResult(),
-            "games.2.goalsTeam2": getRandomResult(),
-            "games.3.goalsTeam1": getRandomResult(),
-            "games.3.goalsTeam2": getRandomResult(),
-            "games.4.goalsTeam1": getRandomResult(),
-            "games.4.goalsTeam2": getRandomResult(),
-            "games.5.goalsTeam1": getRandomResult(),
-            "games.5.goalsTeam2": getRandomResult(),
-            "games.6.goalsTeam1": getRandomResult(),
-            "games.6.goalsTeam2": getRandomResult(),
-            "games.7.goalsTeam1": getRandomResult(),
-            "games.7.goalsTeam2": getRandomResult(),
-            "games.8.goalsTeam1": getRandomResult(),
-            "games.8.goalsTeam2": getRandomResult()        
-        } });
+    collection.update({ matchday: actualMatchDay }, { "$set": {played: 1} });
+    
+    for(var i = 0; i < 9; i++)
+    {
+        var query1= {};
+        var name1 = "games." + i + ".goalsTeam1";
+        query1[name1] = getRandomResult();
+        
+        var query2= {};
+        var name2 = "games." + i + ".goalsTeam2";
+        query2[name2] = getRandomResult();
+        
+        collection.update({ matchday: actualMatchDay }, { "$set": query1 });
+        collection.update({ matchday: actualMatchDay }, { "$set": query2 });
+    }
+    
+//    collection.update({ matchday: actualMatchDay }, { "$set": { 
+//            "games.0.goalsTeam1": getRandomResult(),
+//            "games.0.goalsTeam2": getRandomResult(),
+//            "games.1.goalsTeam1": getRandomResult(),
+//            "games.1.goalsTeam2": getRandomResult(),
+//            "games.2.goalsTeam1": getRandomResult(),
+//            "games.2.goalsTeam2": getRandomResult(),
+//            "games.3.goalsTeam1": getRandomResult(),
+//            "games.3.goalsTeam2": getRandomResult(),
+//            "games.4.goalsTeam1": getRandomResult(),
+//            "games.4.goalsTeam2": getRandomResult(),
+//            "games.5.goalsTeam1": getRandomResult(),
+//            "games.5.goalsTeam2": getRandomResult(),
+//            "games.6.goalsTeam1": getRandomResult(),
+//            "games.6.goalsTeam2": getRandomResult(),
+//            "games.7.goalsTeam1": getRandomResult(),
+//            "games.7.goalsTeam2": getRandomResult(),
+//            "games.8.goalsTeam1": getRandomResult(),
+//            "games.8.goalsTeam2": getRandomResult()        
+//        } });
     
     
     collection.find({ matchday: actualMatchDay }, function (e, games) {
