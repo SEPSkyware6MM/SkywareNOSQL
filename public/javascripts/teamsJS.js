@@ -14,6 +14,7 @@ function showteamdetails(shortname)
         {
             return b.score - a.score;
         });
+        $('#playerTableHeader').html("Spieler von " + data[0].teamname);
         var tableContent = '';
         //Clear the table before injecting the new players
         $('#playertable table tbody').html(tableContent);

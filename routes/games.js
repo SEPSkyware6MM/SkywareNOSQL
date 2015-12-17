@@ -35,22 +35,37 @@ function fillDatabaseWithRandomGames(arrayWithTeams)
         console.log("Connected properly.");
         var col = db.collection('games');
 
-        for (var i = 1; i <= 34; i++)
+        //first half of the season
+        for (var matchday = 1; matchday <= 17; matchday++)
         {
             col.insert(
                     [
                         {
-                            matchday: i,
+                            matchday: matchday,
                             played: 0,
-                            games: getGamesJson(arrayWithTeams, i)
+                            games: getGamesJson(arrayWithTeams, matchday, 1)
                         }
-
                     ],
                     function (err, data) {
                         //handle error
                     }
             );
-
+        }
+        //second half of the saison
+        for (var matchday = 1; matchday <= 17; matchday++)
+        {
+            col.insert(
+                    [
+                        {
+                            matchday: matchday + 17,
+                            played: 0,
+                            games: getGamesJson(arrayWithTeams, matchday, 2)
+                        }
+                    ],
+                    function (err, data) {
+                        //handle error
+                    }
+            );
         }
 
 
@@ -60,55 +75,168 @@ function fillDatabaseWithRandomGames(arrayWithTeams)
     console.log('Erfolgreich eingefügt');
 }
 
-//Returns one Matchday of Games
-function getGamesJson(arrayWithTeams, matchday)
+//divides the array into teams of league one and teams of league two and calls the function, that gets the games of this matchday
+function getGamesJson(arrayWithTeams, matchday, part)
 {
- //TODO FUNKTIONIERT NICHT RICHTIG MUSS FÜR LIGA 2 NOCH GEMACHT WERDEN
+    var teamsLeagueOne = [];
+    var teamsLeagueTwo = [];
+    for(var i = 0; i < arrayWithTeams.length; i++)
+    {
+        if(arrayWithTeams[i].league === 1)
+        {
+            teamsLeagueOne.push(arrayWithTeams[i]);
+        }
+        else if(arrayWithTeams[i].league === 2)
+        {
+            teamsLeagueTwo.push(arrayWithTeams[i]);
+        }
+    }
+    var allGamesLeagueOne = getMatchdayGames(teamsLeagueOne, matchday, part);
+    var allGamesLeagueTwo = getMatchdayGames(teamsLeagueTwo, matchday, part);
+    var allgames = allGamesLeagueOne.concat(allGamesLeagueTwo);
+    //set the new date for the next matchday
+    if(part === 1)
+    {
+        dateOfMatchdayFirstHalf.setDate((dateOfMatchdayFirstHalf.getDate() + 7));  
+    }
+    else
+    {
+        dateOfMatchdaySecondHalf.setDate((dateOfMatchdaySecondHalf.getDate() + 7));
+    }
+    return allgames;
+}
+
+
+//Returns one Matchday of Games
+function getMatchdayGames(arrayWithTeams, matchday, part)
+{
     var jsonArr = [];
-    if(matchday === 1)
+    if (matchday === 1 && part === 1)
     {
         dateOfMatchdayFirstHalf = new Date(2015, 7, 15, 15, 30);
         dateOfMatchdaySecondHalf = new Date(2016, 1, 23, 15, 30);
     }
+    var n = arrayWithTeams.length - 1;
     
-    if (matchday <= 17)
+    
+    if(part === 1)
     {
-        for (var i = 0; i < 18; i += 2)
+        var team1 = arrayWithTeams[matchday - 1];
+        var team2 = arrayWithTeams[n];
+        var date = dateOfMatchdayFirstHalf.toString();    
+    }
+    else
+    {
+        var team2 = arrayWithTeams[matchday - 1];
+        var team1 = arrayWithTeams[n];
+        var date = dateOfMatchdaySecondHalf.toString();
+    }
+    
+    if (matchday % 2 === 0) {
+        jsonArr.push(
+                {
+                    team1: team1.teamname,
+                    team2: team2.teamname,
+                    location: team1.location,
+                    saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
+                    date: date,
+                    goalsTeam1: -1,
+                    goalsTeam2: -1
+                });
+    } else {
+        jsonArr.push(
+                {
+                    team1: team2.teamname,
+                    team2: team1.teamname,
+                    location: team2.location,
+                    saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
+                    date: date,
+                    goalsTeam1: -1,
+                    goalsTeam2: -1
+                });
+    }
+    for (var k = 1; k < (n + 1) / 2; k++) {
+        
+        var tmp = (matchday + k) % n;
+        var teamA = tmp === 0 ? n : tmp;
+        tmp = ((matchday - k % n) + n) % n;
+        var teamB = tmp === 0 ? n : tmp;
+        
+        if(part === 1)
         {
-            //Hinspiele
+            var team1 = arrayWithTeams[teamA - 1];
+            var team2 = arrayWithTeams[teamB - 1];
+        }
+        else
+        {
+            var team2 = arrayWithTeams[teamA - 1];
+            var team1 = arrayWithTeams[teamB - 1];
+        }
+        
+        if (k % 2 !== 0) {
             jsonArr.push(
-                    {                 
-                        team1: arrayWithTeams[i].teamname,
-                        team2: arrayWithTeams[(i + matchday) % 18].teamname,
-                        location: arrayWithTeams[i].location,
+                    {
+                        team1: team1.teamname,
+                        team2: team2.teamname,
+                        location: team1.location,
                         saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
-                        date: dateOfMatchdayFirstHalf.toString(),
+                        date: date,
+                        goalsTeam1: -1,
+                        goalsTeam2: -1
+                    });
+        } else {
+            jsonArr.push(
+                    {
+                        team1: team2.teamname,
+                        team2: team1.teamname,
+                        location: team2.location,
+                        saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
+                        date: date,
                         goalsTeam1: -1,
                         goalsTeam2: -1
                     });
         }
-        //add one week after all matches are played
-        dateOfMatchdayFirstHalf.setDate((dateOfMatchdayFirstHalf.getDate() + 7));
+
     }
-    else if(matchday > 18)
-    {      
-        for (var i = 0; i < 18; i += 2)
-        {
-        //Rückspiel
-        jsonArr.push(
-                {                 
-                    team1: arrayWithTeams[(i + matchday) % 18].teamname,
-                    team2: arrayWithTeams[i].teamname,
-                    location: arrayWithTeams[(i + matchday) % 18].location,
-                    saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
-                    date: dateOfMatchdaySecondHalf.toString(),
-                    goalsTeam1: -1,
-                    goalsTeam2: -1
-                });
-        } 
-        //add one week after all matches are played
-        dateOfMatchdaySecondHalf.setDate((dateOfMatchdaySecondHalf.getDate() + 7));
-    }
+
+//    if (matchday <= 17)
+//    {
+//        for (var i = 0; i < 36; i += 2)
+//        {
+//            //Hinspiele
+//            jsonArr.push(
+//                    {                 
+//                        team1: arrayWithTeams[i].teamname,
+//                        team2: arrayWithTeams[(i + matchday) % 36].teamname,
+//                        location: arrayWithTeams[i].location,
+//                        saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
+//                        date: dateOfMatchdayFirstHalf.toString(),
+//                        goalsTeam1: -1,
+//                        goalsTeam2: -1
+//                    });
+//        }
+//        //add one week after all matches are played
+//        dateOfMatchdayFirstHalf.setDate((dateOfMatchdayFirstHalf.getDate() + 7));
+//    }
+//    else if(matchday > 18)
+//    {      
+//        for (var i = 0; i < 36; i += 2)
+//        {
+//        //Rückspiel
+//        jsonArr.push(
+//                {                 
+//                    team1: arrayWithTeams[(i + matchday) % 36].teamname,
+//                    team2: arrayWithTeams[i].teamname,
+//                    location: arrayWithTeams[(i + matchday) % 36].location,
+//                    saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
+//                    date: dateOfMatchdaySecondHalf.toString(),
+//                    goalsTeam1: -1,
+//                    goalsTeam2: -1
+//                });
+//        } 
+//        //add one week after all matches are played
+//        dateOfMatchdaySecondHalf.setDate((dateOfMatchdaySecondHalf.getDate() + 7));
+//    }
     return jsonArr;
 }
 
@@ -148,46 +276,44 @@ function updateGames(everyMatchdayGames, req, res)
     }
 
     var db = req.db;
-    
-    db.get('games').update({ matchday: actualMatchDay }, { "$set": {played: 1} });
-    
+
+    db.get('games').update({matchday: actualMatchDay}, {"$set": {played: 1}});
+
     //update Matches with random results
-    for(var i = 0; i < 9; i++)
+    for (var i = 0; i < gamesOrderedByMatchday[0].games.length; i++)
     {
-        var query1= {};
+        var query1 = {};
         var name1 = "games." + i + ".goalsTeam1";
         query1[name1] = getRandomResult();
-        
-        var query2= {};
+
+        var query2 = {};
         var name2 = "games." + i + ".goalsTeam2";
         query2[name2] = getRandomResult();
-        
-        db.get('games').update({ matchday: actualMatchDay }, { "$set": query1 });
-        db.get('games').update({ matchday: actualMatchDay }, { "$set": query2 });
-        
+
+        db.get('games').update({matchday: actualMatchDay}, {"$set": query1});
+        db.get('games').update({matchday: actualMatchDay}, {"$set": query2});
+
     }
     //update points per team
-    db.get('games').find({ matchday: actualMatchDay }, function (e, games) {
+    db.get('games').find({matchday: actualMatchDay}, function (e, games) {
         var matchdayGames = games[0].games;
         for (var i = 0; i < matchdayGames.length; i++)
         {
             if (matchdayGames[i].goalsTeam1 > matchdayGames[i].goalsTeam2)
             {
-                    db.get('teams').update({ teamname: matchdayGames[i].team1 }, { "$inc": { points: 3 } });
-            }
-            else if (matchdayGames[i].goalsTeam1 < matchdayGames[i].goalsTeam2)
+                db.get('teams').update({teamname: matchdayGames[i].team1}, {"$inc": {points: 3}});
+            } else if (matchdayGames[i].goalsTeam1 < matchdayGames[i].goalsTeam2)
             {
-                    db.get('teams').update({ teamname: matchdayGames[i].team2 }, { "$inc": { points: 3 } });
-            }
-            else if (matchdayGames[i].goalsTeam1 === matchdayGames[i].goalsTeam2)
+                db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": {points: 3}});
+            } else if (matchdayGames[i].goalsTeam1 === matchdayGames[i].goalsTeam2)
             {
-                    db.get('teams').update({ teamname: matchdayGames[i].team1 }, { "$inc": { points: 1 } });
-                    db.get('teams').update({ teamname: matchdayGames[i].team2 }, { "$inc": { points: 1 } });
-            }	 
+                db.get('teams').update({teamname: matchdayGames[i].team1}, {"$inc": {points: 1}});
+                db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": {points: 1}});
+            }
         }
     });
-    
-    
+
+
     res.send("Erfolgreich geändert");
 }
 
