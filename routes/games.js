@@ -198,51 +198,12 @@ function getMatchdayGames(arrayWithTeams, matchday, part)
         }
 
     }
-
-//    if (matchday <= 17)
-//    {
-//        for (var i = 0; i < 36; i += 2)
-//        {
-//            //Hinspiele
-//            jsonArr.push(
-//                    {                 
-//                        team1: arrayWithTeams[i].teamname,
-//                        team2: arrayWithTeams[(i + matchday) % 36].teamname,
-//                        location: arrayWithTeams[i].location,
-//                        saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
-//                        date: dateOfMatchdayFirstHalf.toString(),
-//                        goalsTeam1: -1,
-//                        goalsTeam2: -1
-//                    });
-//        }
-//        //add one week after all matches are played
-//        dateOfMatchdayFirstHalf.setDate((dateOfMatchdayFirstHalf.getDate() + 7));
-//    }
-//    else if(matchday > 18)
-//    {      
-//        for (var i = 0; i < 36; i += 2)
-//        {
-//        //Rückspiel
-//        jsonArr.push(
-//                {                 
-//                    team1: arrayWithTeams[(i + matchday) % 36].teamname,
-//                    team2: arrayWithTeams[i].teamname,
-//                    location: arrayWithTeams[(i + matchday) % 36].location,
-//                    saison: dateOfMatchdayFirstHalf.getFullYear() + "/" + dateOfMatchdaySecondHalf.getFullYear(),
-//                    date: dateOfMatchdaySecondHalf.toString(),
-//                    goalsTeam1: -1,
-//                    goalsTeam2: -1
-//                });
-//        } 
-//        //add one week after all matches are played
-//        dateOfMatchdaySecondHalf.setDate((dateOfMatchdaySecondHalf.getDate() + 7));
-//    }
     return jsonArr;
 }
 
-function getRandomResult()
+function getRandomNumber(max)
 {
-    return Math.floor((Math.random() * 5));
+    return Math.floor((Math.random() * max));
 }
 
 /* GET simulate Matchday */
@@ -284,11 +245,11 @@ function updateGames(everyMatchdayGames, req, res)
     {
         var query1 = {};
         var name1 = "games." + i + ".goalsTeam1";
-        query1[name1] = getRandomResult();
+        query1[name1] = getRandomNumber(5);
 
         var query2 = {};
         var name2 = "games." + i + ".goalsTeam2";
-        query2[name2] = getRandomResult();
+        query2[name2] = getRandomNumber(5);
 
         db.get('games').update({matchday: actualMatchDay}, {"$set": query1});
         db.get('games').update({matchday: actualMatchDay}, {"$set": query2});
@@ -311,6 +272,34 @@ function updateGames(everyMatchdayGames, req, res)
                 db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": {points: 1}});
             }
         }
+    });
+    
+    //update goals of players
+    db.get('games').find({matchday: actualMatchDay}, function(e,games) {
+       var matchdayGames = games[0].games;
+
+       for(var i = 0; i < matchdayGames.length; i++)
+       {
+           var goalsTeam1OfGame = matchdayGames[i].goalsTeam1;
+           var goalsTeam2OfGame = matchdayGames[i].goalsTeam2;
+           
+           for(var k = 0; k < goalsTeam1OfGame; k++)
+           {
+                var query = {};
+                var player = "players." + getRandomNumber(18) + ".score";
+                query[player] = 1;
+                db.get('teams').update({teamname: matchdayGames[i].team1}, {"$inc": query});
+           }
+           
+           for(var k = 0; k < goalsTeam2OfGame; k++)
+           {
+                var query = {};
+                var player = "players." + getRandomNumber(18) + ".score";
+                query[player] = 1;
+                db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": query});
+           }
+
+       }
     });
 
 
