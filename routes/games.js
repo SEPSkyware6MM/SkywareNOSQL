@@ -13,11 +13,10 @@ router.get('/', function (req, res, next) {
 router.get('/write/fillDB', function (req, res) {
     var db = req.db;
     var collection = db.get('teams');
-    collection.find({league: 1}, function (err, teams) {
+    collection.find({}, function (err, teams) {
         fillDatabaseWithRandomGames(teams);
-        res.send("DB erfolgreich gefüllt");
     });
-
+    res.send("DB erfolgreich gefüllt");
 });
 
 /* GET game listing. */
@@ -64,7 +63,7 @@ function fillDatabaseWithRandomGames(arrayWithTeams)
 //Returns one Matchday of Games
 function getGamesJson(arrayWithTeams, matchday)
 {
- //TODO FUNKTIONIERT NICHT RICHTIG
+ //TODO FUNKTIONIERT NICHT RICHTIG MUSS FÜR LIGA 2 NOCH GEMACHT WERDEN
     var jsonArr = [];
     if(matchday === 1)
     {
@@ -95,7 +94,7 @@ function getGamesJson(arrayWithTeams, matchday)
     {      
         for (var i = 0; i < 18; i += 2)
         {
-        //Hinspiele
+        //Rückspiel
         jsonArr.push(
                 {                 
                     team1: arrayWithTeams[(i + matchday) % 18].teamname,
@@ -139,7 +138,7 @@ function updateGames(everyMatchdayGames, req, res)
     var i = 0;
     while (i < 34 && !matchDayFound)
     {
-        //Er wird geschaut welcher SPieltag als nächstes eingetragen werden muss
+        //which matchday has to be simulated next
         if (gamesOrderedByMatchday[i].played === 0)
         {
             actualMatchDay = gamesOrderedByMatchday[i].matchday;
@@ -149,10 +148,10 @@ function updateGames(everyMatchdayGames, req, res)
     }
 
     var db = req.db;
-    var collection = db.get('games');
     
-    collection.update({ matchday: actualMatchDay }, { "$set": {played: 1} });
+    db.get('games').update({ matchday: actualMatchDay }, { "$set": {played: 1} });
     
+    //update Matches with random results
     for(var i = 0; i < 9; i++)
     {
         var query1= {};
@@ -163,33 +162,12 @@ function updateGames(everyMatchdayGames, req, res)
         var name2 = "games." + i + ".goalsTeam2";
         query2[name2] = getRandomResult();
         
-        collection.update({ matchday: actualMatchDay }, { "$set": query1 });
-        collection.update({ matchday: actualMatchDay }, { "$set": query2 });
+        db.get('games').update({ matchday: actualMatchDay }, { "$set": query1 });
+        db.get('games').update({ matchday: actualMatchDay }, { "$set": query2 });
+        
     }
-    
-//    collection.update({ matchday: actualMatchDay }, { "$set": { 
-//            "games.0.goalsTeam1": getRandomResult(),
-//            "games.0.goalsTeam2": getRandomResult(),
-//            "games.1.goalsTeam1": getRandomResult(),
-//            "games.1.goalsTeam2": getRandomResult(),
-//            "games.2.goalsTeam1": getRandomResult(),
-//            "games.2.goalsTeam2": getRandomResult(),
-//            "games.3.goalsTeam1": getRandomResult(),
-//            "games.3.goalsTeam2": getRandomResult(),
-//            "games.4.goalsTeam1": getRandomResult(),
-//            "games.4.goalsTeam2": getRandomResult(),
-//            "games.5.goalsTeam1": getRandomResult(),
-//            "games.5.goalsTeam2": getRandomResult(),
-//            "games.6.goalsTeam1": getRandomResult(),
-//            "games.6.goalsTeam2": getRandomResult(),
-//            "games.7.goalsTeam1": getRandomResult(),
-//            "games.7.goalsTeam2": getRandomResult(),
-//            "games.8.goalsTeam1": getRandomResult(),
-//            "games.8.goalsTeam2": getRandomResult()        
-//        } });
-    
-    
-    collection.find({ matchday: actualMatchDay }, function (e, games) {
+    //update points per team
+    db.get('games').find({ matchday: actualMatchDay }, function (e, games) {
         var matchdayGames = games[0].games;
         for (var i = 0; i < matchdayGames.length; i++)
         {
@@ -208,7 +186,7 @@ function updateGames(everyMatchdayGames, req, res)
             }	 
         }
     });
-
+    
     
     res.send("Erfolgreich geändert");
 }
