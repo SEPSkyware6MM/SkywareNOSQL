@@ -14,7 +14,7 @@ html
                 li
                   a(href='/teams') Tabelle
                 li
-                  a(href='/games') Spiele
+                  a(href='/games') Spielplan
                 li
                   a(class='active' href='/settings') Settings
                 li
@@ -22,8 +22,8 @@ html
             h1 Settings
 
             p
-                button(onclick='FillDatabase("/teams")') FillDBWithTeams
+                button(class="btn", onclick='FillDatabase("/teams")') FillDBWithTeams
                 br                
-                button(onclick='FillDatabase("/games")') FillDBWithGames
+                button(class="btn", onclick='FillDatabase("/games")') FillDBWithGames
                 br                
-                button(onclick='SimulateMatchday()') SimulateMatchday
+                button(class="btn", onclick='SimulateMatchday()') SimulateMatchday

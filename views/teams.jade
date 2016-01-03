@@ -14,7 +14,7 @@ html
                 li
                   a(class='active' href='/teams') Tabelle
                 li
-                  a(href='/games') Spiele
+                  a(href='/games') Spielplan
                 li
                   a(href='/settings') Settings
                 li
@@ -23,8 +23,8 @@ html
 
             h1= title
             p
-                button(onclick='populateTable(1)') Liga 1
-                button(onclick='populateTable(2)') Liga 2
+                button(class="btn", onclick='populateTable(1)') Liga 1
+                button(class="btn", onclick='populateTable(2)') Liga 2
             // USER LIST
             #teamTableWithHeader
                 h2 Tabelle

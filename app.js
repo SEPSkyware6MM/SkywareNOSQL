@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
-//var players = require('./routes/players');
 var teams = require('./routes/teams');
 var games = require('./routes/games');
 var settings = require('./routes/settings');
