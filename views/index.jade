@@ -3,18 +3,25 @@ extends layout
 doctype html
 html
     head
-        title= title
         link(rel='stylesheet', href='/stylesheets/style.css')
     body
         block content
             script(src='/javascripts/jquery2.1.4.js')
             script(src='/javascripts/global.js')
-            h1= title
-            p Welcome to our test
-            
+            h1= "Fußball Ticker"
+           
+            ul#navbar
+                li
+                  a(href='/teams') Tabelle
+                li
+                  a(href='/games') Spiele
+                li
+                  a(href='/settings') Settings
+                li
+                  a(href='/about') About
 
             // USER LIST
-            h2 User List
+            h2 Aktuelle Tabelle
             #playertable
                 table
                     thead

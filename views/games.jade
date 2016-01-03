@@ -9,7 +9,17 @@ html
         block content
             script(src='/javascripts/jquery2.1.4.js')
             script(src='/javascripts/gamesJS.js')
-            a(class='button', href='/games/write/fillDB') FillDBWithGames
+            
+            ul#navbar
+                li
+                  a(href='/teams') Tabelle
+                li
+                  a(href='/games') Spiele
+                li
+                  a(href='/settings') Settings
+                li
+                  a(href='/about') About
+                  
             h1= title
                 h2 Spiele
                 #gamestable

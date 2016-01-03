@@ -2,7 +2,6 @@ $(document).ready(function() {
     populateTable();
 });
 
-
 function populateTable()
 {
         $.ajax({

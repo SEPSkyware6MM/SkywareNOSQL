@@ -8,6 +8,8 @@ var routes = require('./routes/index');
 //var players = require('./routes/players');
 var teams = require('./routes/teams');
 var games = require('./routes/games');
+var settings = require('./routes/settings');
+var about = require('./routes/about');
 var app = express();
 var mongo = require('mongodb');
 var monk = require('monk');
@@ -36,6 +38,8 @@ app.use('/', routes);
 //app.use('/players', players);
 app.use('/teams', teams);
 app.use('/games', games);
+app.use('/settings', settings);
+app.use('/about', about);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

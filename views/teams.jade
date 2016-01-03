@@ -9,13 +9,24 @@ html
         block content
             script(src='/javascripts/jquery2.1.4.js')
             script(src='/javascripts/teamsJS.js')
-            a(class='button', href='/teams/write/fillDB') FillDBWithTeams
-            button(onclick='populateTable(1)') Liga 1
-            button(onclick='populateTable(2)') Liga 2
+
+            ul#navbar
+                li
+                  a(href='/teams') Tabelle
+                li
+                  a(href='/games') Spiele
+                li
+                  a(href='/settings') Settings
+                li
+                  a(href='/about') About
+
+
             h1= title
             // USER LIST
             #teamTableWithHeader
-                h2 Tabelle 
+                h2 Tabelle
+                button(onclick='populateTable(1)') Liga 1
+                button(onclick='populateTable(2)') Liga 2
                 #teamtable
                     table
                         thead
