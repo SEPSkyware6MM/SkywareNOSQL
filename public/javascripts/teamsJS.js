@@ -1,5 +1,6 @@
 $(document).ready(function() {
     populateTable(1);
+    $('#playerTableWithHeader').hide();
 });
 
 function showteamdetails(shortname)
@@ -14,7 +15,7 @@ function showteamdetails(shortname)
         {
             return b.score - a.score;
         });
-        $('#playerTableHeader').html("Spieler von " + data[0].teamname);
+        $('#playerTableHeader').html('<img src="' + data[0].icon + '">' + " Spieler von " + data[0].teamname);
         var tableContent = '';
         //Clear the table before injecting the new players
         $('#playertable table tbody').html(tableContent);
@@ -28,7 +29,8 @@ function showteamdetails(shortname)
         });
 
         // Inject the whole content string into our existing HTML table
-        $('#playertable table tbody').html(tableContent);    
+        $('#playertable table tbody').html(tableContent); 
+        $('#playerTableWithHeader').show();
     });;
 }
 
@@ -67,5 +69,6 @@ function populateTable(searchedleague) {
 
         // Inject the whole content string into our existing HTML table
         $('#teamtable table tbody').html(tableContent);
+        $('#playerTableWithHeader').hide();
     });
 };

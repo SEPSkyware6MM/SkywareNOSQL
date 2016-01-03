@@ -8,18 +8,22 @@ html
         link(rel='stylesheet', href='/stylesheets/style.css')
     body
         block content
+            script(src='/javascripts/jquery2.1.4.js')
+            script(src='/javascripts/settingsJS.js')
             ul#navbar
                 li
                   a(href='/teams') Tabelle
                 li
                   a(href='/games') Spiele
                 li
-                  a(href='/settings') Settings
+                  a(class='active' href='/settings') Settings
                 li
                   a(href='/about') About
             h1 Settings
 
             p
-                a(class='button', href='/teams/write/fillDB') FillDBWithTeams
-                br
-                a(class='button', href='/games/write/fillDB') FillDBWithGames
+                button(onclick='FillDatabase("/teams")') FillDBWithTeams
+                br                
+                button(onclick='FillDatabase("/games")') FillDBWithGames
+                br                
+                button(onclick='SimulateMatchday()') SimulateMatchday

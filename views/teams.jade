@@ -12,7 +12,7 @@ html
 
             ul#navbar
                 li
-                  a(href='/teams') Tabelle
+                  a(class='active' href='/teams') Tabelle
                 li
                   a(href='/games') Spiele
                 li
@@ -22,11 +22,12 @@ html
 
 
             h1= title
+            p
+                button(onclick='populateTable(1)') Liga 1
+                button(onclick='populateTable(2)') Liga 2
             // USER LIST
             #teamTableWithHeader
                 h2 Tabelle
-                button(onclick='populateTable(1)') Liga 1
-                button(onclick='populateTable(2)') Liga 2
                 #teamtable
                     table
                         thead

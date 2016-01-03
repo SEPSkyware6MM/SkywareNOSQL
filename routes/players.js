@@ -34,7 +34,7 @@ function getTeam(testteamid, req, res)
 }
 
 // Database 1
-router.get('/write/fillDB', function(req, res){
+router.put('/write/fillDB', function(req, res){
     var mongo = require('mongodb').MongoClient;
     mongo.connect('mongodb://localhost:27017/fussballApp', function(err, db){
         console.log("Connected properly.");

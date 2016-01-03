@@ -21,7 +21,7 @@ function populateTable()
         $('#gamestable table tbody').html(tableContent);
         // For each item in our JSON, add a table row and cells to the content string
         $.each(gamesOrderedByMatchday, function(){
-            tableContent += '<tr><th class="middleTh"> Spieltag:' + this.matchday + '</th></tr>';
+            tableContent += '<tr><th class="middleTh"> Spieltag ' + this.matchday + '</th></tr>';
 
             $.each(this.games, function()
             {

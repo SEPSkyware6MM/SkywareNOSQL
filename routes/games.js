@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
 
 // Database 1
 //team1 team2 ort saison spieltag datum toreteam1 toreteam2
-router.get('/write/fillDB', function (req, res) {
+router.put('/write/fillDB', function (req, res) {
     var db = req.db;
     var collection = db.get('teams');
     collection.find({}, function (err, teams) {
@@ -207,7 +207,7 @@ function getRandomNumber(max)
 }
 
 /* GET simulate Matchday */
-router.get('/simulate', function (req, res) {
+router.put('/simulate', function (req, res) {
     var db = req.db;
     var collection = db.get('games');
     collection.find({}, {}, function (e, everyMatchdayGames) {
