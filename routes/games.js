@@ -8,6 +8,14 @@ router.get('/', function (req, res, next) {
     res.render('games', {title: 'Spiele'});
 });
 
+//Delete all games in Database
+router.delete('/', function (req, res, next) {
+    var db = req.db;
+    var collection = db.get('games');
+    collection.drop();
+    res.send("Games erfolgreich gelöscht");
+});
+
 // Database 1
 //team1 team2 ort saison spieltag datum toreteam1 toreteam2
 router.put('/write/fillDB', function (req, res) {

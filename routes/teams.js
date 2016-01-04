@@ -7,6 +7,15 @@ router.get('/', function(req,res,next){
     res.render('teams', {title: 'Teams'});
 });
 
+//Delete all Teams in Database
+router.delete('/', function (req, res, next) {
+    var db = req.db;
+    var collection = db.get('teams');
+    collection.drop();
+    res.send("Teams erfolgreich gelöscht");
+});
+
+
 /* GET team listing. */
 router.get('/list', function(req, res) {
     var db = req.db;

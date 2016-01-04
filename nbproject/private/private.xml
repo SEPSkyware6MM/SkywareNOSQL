@@ -4,12 +4,24 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/routes/games.js</file>
-            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/routes/teams.js</file>
-            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/routes/players.js</file>
-            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/views/teams.jade</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/views/index.jade</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/public/javascripts/settingsJS.js</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/routes/about.js</file>
             <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/public/javascripts/gamesJS.js</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/routes/index.js</file>
             <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/public/javascripts/teamsJS.js</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/views/settings.jade</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/views/layout.jade</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/public/stylesheets/style.css</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/routes/teams.js</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/views/about.jade</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/views/teams.jade</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/public/javascripts/global.js</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/package.json</file>
             <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/views/games.jade</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/routes/settings.js</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/app.js</file>
+            <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/views/error.jade</file>
             <file>file:/C:/Users/Marc/Desktop/Marc%20IB/7.%20Semester/NoSQL/Project/SkywareNOSQL/bin/www</file>
         </group>
     </open-files>

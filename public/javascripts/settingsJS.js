@@ -12,3 +12,11 @@ function SimulateMatchday(){
     });
 }
 
+function DeleteCollection(whatToDelete)
+{
+    $.ajax({
+        url: whatToDelete + "",
+        type: 'DELETE'
+    });
+}
+
