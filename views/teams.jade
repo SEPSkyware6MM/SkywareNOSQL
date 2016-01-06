@@ -29,20 +29,20 @@ html
             #teamTableWithHeader
                 h2 Tabelle
                 #teamtable
-                    table
+                    table#teamTableSort
                         thead
                             th Icon
-                            th Teamname
-                            th Punkte
+                            th(class="sortableHeader") Teamname
+                            th(class="sortableHeader") Punkte
                         tbody
             #playerTableWithHeader
                 h2#playerTableHeader
                 #playertable
-                    table
+                    table#playerTableSort
                         thead 
-                            th Vorname
-                            th Nachname
-                            th Tore
+                            th(class="sortableHeader") Vorname
+                            th(class="sortableHeader") Nachname
+                            th(class="sortableHeader") Tore
                         tbody
                     
             // /USER LIST
