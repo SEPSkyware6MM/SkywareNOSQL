@@ -88,13 +88,12 @@ function getGamesJson(arrayWithTeams, matchday, part)
 {
     var teamsLeagueOne = [];
     var teamsLeagueTwo = [];
-    for(var i = 0; i < arrayWithTeams.length; i++)
+    for (var i = 0; i < arrayWithTeams.length; i++)
     {
-        if(arrayWithTeams[i].league === 1)
+        if (arrayWithTeams[i].league === 1)
         {
             teamsLeagueOne.push(arrayWithTeams[i]);
-        }
-        else if(arrayWithTeams[i].league === 2)
+        } else if (arrayWithTeams[i].league === 2)
         {
             teamsLeagueTwo.push(arrayWithTeams[i]);
         }
@@ -103,11 +102,10 @@ function getGamesJson(arrayWithTeams, matchday, part)
     var allGamesLeagueTwo = getMatchdayGames(teamsLeagueTwo, matchday, part);
     var allgames = allGamesLeagueOne.concat(allGamesLeagueTwo);
     //set the new date for the next matchday
-    if(part === 1)
+    if (part === 1)
     {
-        dateOfMatchdayFirstHalf.setDate((dateOfMatchdayFirstHalf.getDate() + 7));  
-    }
-    else
+        dateOfMatchdayFirstHalf.setDate((dateOfMatchdayFirstHalf.getDate() + 7));
+    } else
     {
         dateOfMatchdaySecondHalf.setDate((dateOfMatchdaySecondHalf.getDate() + 7));
     }
@@ -125,21 +123,20 @@ function getMatchdayGames(arrayWithTeams, matchday, part)
         dateOfMatchdaySecondHalf = new Date(2016, 1, 23, 15, 30);
     }
     var n = arrayWithTeams.length - 1;
-    
-    
-    if(part === 1)
+
+
+    if (part === 1)
     {
         var team1 = arrayWithTeams[matchday - 1];
         var team2 = arrayWithTeams[n];
-        var date = dateOfMatchdayFirstHalf.toString();    
-    }
-    else
+        var date = dateOfMatchdayFirstHalf.toString();
+    } else
     {
         var team2 = arrayWithTeams[matchday - 1];
         var team1 = arrayWithTeams[n];
         var date = dateOfMatchdaySecondHalf.toString();
     }
-    
+
     if (matchday % 2 === 0) {
         jsonArr.push(
                 {
@@ -164,23 +161,22 @@ function getMatchdayGames(arrayWithTeams, matchday, part)
                 });
     }
     for (var k = 1; k < (n + 1) / 2; k++) {
-        
+
         var tmp = (matchday + k) % n;
         var teamA = tmp === 0 ? n : tmp;
         tmp = ((matchday - k % n) + n) % n;
         var teamB = tmp === 0 ? n : tmp;
-        
-        if(part === 1)
+
+        if (part === 1)
         {
             var team1 = arrayWithTeams[teamA - 1];
             var team2 = arrayWithTeams[teamB - 1];
-        }
-        else
+        } else
         {
             var team2 = arrayWithTeams[teamA - 1];
             var team1 = arrayWithTeams[teamB - 1];
         }
-        
+
         if (k % 2 !== 0) {
             jsonArr.push(
                     {
@@ -281,37 +277,112 @@ function updateGames(everyMatchdayGames, req, res)
             }
         }
     });
-    
+
     //update goals of players
-    db.get('games').find({matchday: actualMatchDay}, function(e,games) {
-       var matchdayGames = games[0].games;
+    db.get('games').find({matchday: actualMatchDay}, function (e, games) {
+        var matchdayGames = games[0].games;
+        for (var i = 0; i < matchdayGames.length; i++)
+        {          
 
-       for(var i = 0; i < matchdayGames.length; i++)
-       {
-           var goalsTeam1OfGame = matchdayGames[i].goalsTeam1;
-           var goalsTeam2OfGame = matchdayGames[i].goalsTeam2;
-           
-           for(var k = 0; k < goalsTeam1OfGame; k++)
-           {
-                var query = {};
-                var player = "players." + getRandomNumber(18) + ".score";
-                query[player] = 1;
-                db.get('teams').update({teamname: matchdayGames[i].team1}, {"$inc": query});
-           }
-           
-           for(var k = 0; k < goalsTeam2OfGame; k++)
-           {
-                var query = {};
-                var player = "players." + getRandomNumber(18) + ".score";
-                query[player] = 1;
-                db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": query});
-           }
-
-       }
+                writeGoalsInDB(matchdayGames[i], db);
+        }
     });
 
 
     res.send("Erfolgreich geändert");
+}
+
+
+function writeGoalsInDB(oneOfMatchdayGames, db)
+{
+    var game = oneOfMatchdayGames;
+    var goalsTeam1OfGame = game.goalsTeam1;
+    var goalsTeam2OfGame = game.goalsTeam2;
+    for (var k = 0; k < goalsTeam1OfGame; k++)
+    {
+        db.get('teams').find({teamname: game.team1}, function (e, teams)
+        {
+            var players = teams[0].players;
+            var probability = getRandomNumber(9);
+            var playerWithGoal;
+            if (probability <= 1)
+            {
+                var backfieldPlayers = getIndicesOfPosition("Verteidiger", players);
+                playerWithGoal = getRandomNumber(backfieldPlayers.length - 1);
+                var query = {};
+                var player = "players." + backfieldPlayers[playerWithGoal] + ".score";
+                query[player] = 1;
+                db.get('teams').update({teamname: game.team1}, {"$inc": query});
+
+            } else if (probability <= 4)
+            {
+                var midfieldPlayers = getIndicesOfPosition("Mittelfeld", players);
+                playerWithGoal = getRandomNumber(midfieldPlayers.length - 1);
+                var query = {};
+                var player = "players." + midfieldPlayers[playerWithGoal] + ".score";
+                query[player] = 1;
+                db.get('teams').update({teamname: game.team1}, {"$inc": query});
+            } else
+            {
+                var forwardPlayers = getIndicesOfPosition("Stürmer", players);
+                playerWithGoal = getRandomNumber(forwardPlayers.length - 1);
+                var query = {};
+                var player = "players." + forwardPlayers[playerWithGoal] + ".score";
+                query[player] = 1;
+                db.get('teams').update({teamname: game.team1}, {"$inc": query});
+            }
+        });
+    }
+
+    for (var k = 0; k < goalsTeam2OfGame; k++)
+    {
+        db.get('teams').find({teamname: game.team2}, function (e, teams)
+        {
+            var players = teams[0].players;
+            var probability = getRandomNumber(9);
+            var playerWithGoal;
+            if (probability <= 1)
+            {
+                var backfieldPlayers = getIndicesOfPosition("Verteidiger", players);
+                playerWithGoal = getRandomNumber(backfieldPlayers.length - 1);
+                var query = {};
+                var player = "players." + backfieldPlayers[playerWithGoal] + ".score";
+                query[player] = 1;
+                db.get('teams').update({teamname: game.team2}, {"$inc": query});
+
+            } else if (probability <= 4)
+            {
+                var midfieldPlayers = getIndicesOfPosition("Mittelfeld", players);
+                playerWithGoal = getRandomNumber(midfieldPlayers.length - 1);
+                var query = {};
+                var player = "players." + midfieldPlayers[playerWithGoal] + ".score";
+                query[player] = 1;
+                db.get('teams').update({teamname: game.team2}, {"$inc": query});
+            } else
+            {
+                var forwardPlayers = getIndicesOfPosition("Stürmer", players);
+                playerWithGoal = getRandomNumber(forwardPlayers.length - 1);
+                var query = {};
+                var player = "players." + forwardPlayers[playerWithGoal] + ".score";
+                query[player] = 1;
+                db.get('teams').update({teamname: game.team2}, {"$inc": query});
+            }
+        });
+    }
+}
+
+
+function getIndicesOfPosition(position, players)
+{
+    var indicesOfPosition = [];
+    for (var i = 0; i < players.length; i++)
+    {
+        if (players[i].position === position)
+        {
+            indicesOfPosition.push(i);
+        }
+    }
+    return indicesOfPosition;
 }
 
 module.exports = router;

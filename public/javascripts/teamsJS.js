@@ -53,6 +53,7 @@ function showteamdetails(shortname)
             tableContent += '<tr>';
             tableContent += '<td>' + this.firstname + '</td>';
             tableContent += '<td>' + this.lastname + '</td>';
+            tableContent += '<td>' + this.position + '</td>';
             tableContent += '<td>' + this.score + '</td>';
             tableContent += '</tr>';
         });

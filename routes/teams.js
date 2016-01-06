@@ -113,11 +113,32 @@ function insertTeam(name, shortname, icon, link, city, ourLeagueCode) {
                         firstname += names[i];
                     }
                 }
+                
+                var position = "default";
+                if(players[j].position === "Keeper")
+                {
+                    position = "Torwart";
+                }
+                else if(players[j].position.includes("Back"))
+                {
+                    position = "Verteidiger";
+                }
+                else if(players[j].position.includes("Midfield") || players[j].position.includes("Wing"))
+                {
+                    position = "Mittelfeld";
+                }
+                else if(players[j].position.includes("Forward") || players[j].position.includes("Striker"))
+                {
+                    position = "Stürmer";
+                }
+                
+                
                 jsonArr.push(
                         {
                             firstname: firstname,
                             lastname: names[names.length - 1],
-                            score: 0
+                            score: 0,
+                            position: position
                         });
             };
             
