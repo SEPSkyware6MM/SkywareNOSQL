@@ -240,56 +240,66 @@ function updateGames(everyMatchdayGames, req, res)
         i++;
     }
 
-    var db = req.db;
-
-    db.get('games').update({matchday: actualMatchDay}, {"$set": {played: 1}});
-
-    //update Matches with random results
-    for (var i = 0; i < gamesOrderedByMatchday[0].games.length; i++)
+    if (new Date(gamesOrderedByMatchday[actualMatchDay - 1].games[0].date) < new Date())
     {
-        var query1 = {};
-        var name1 = "games." + i + ".goalsTeam1";
-        query1[name1] = getRandomNumber(5);
+        var db = req.db;
 
-        var query2 = {};
-        var name2 = "games." + i + ".goalsTeam2";
-        query2[name2] = getRandomNumber(5);
+        db.get('games').update({matchday: actualMatchDay}, {"$set": {played: 1}});
 
-        db.get('games').update({matchday: actualMatchDay}, {"$set": query1});
-        db.get('games').update({matchday: actualMatchDay}, {"$set": query2});
-
-    }
-    //update points per team
-    db.get('games').find({matchday: actualMatchDay}, function (e, games) {
-        var matchdayGames = games[0].games;
-        for (var i = 0; i < matchdayGames.length; i++)
+        //update Matches with random results
+        for (var i = 0; i < gamesOrderedByMatchday[0].games.length; i++)
         {
-            if (matchdayGames[i].goalsTeam1 > matchdayGames[i].goalsTeam2)
-            {
-                db.get('teams').update({teamname: matchdayGames[i].team1}, {"$inc": {points: 3}});
-            } else if (matchdayGames[i].goalsTeam1 < matchdayGames[i].goalsTeam2)
-            {
-                db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": {points: 3}});
-            } else if (matchdayGames[i].goalsTeam1 === matchdayGames[i].goalsTeam2)
-            {
-                db.get('teams').update({teamname: matchdayGames[i].team1}, {"$inc": {points: 1}});
-                db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": {points: 1}});
-            }
-        }
-    });
+            var query1 = {};
+            var name1 = "games." + i + ".goalsTeam1";
+            query1[name1] = getRandomNumber(5);
 
-    //update goals of players
-    db.get('games').find({matchday: actualMatchDay}, function (e, games) {
-        var matchdayGames = games[0].games;
-        for (var i = 0; i < matchdayGames.length; i++)
-        {          
+            var query2 = {};
+            var name2 = "games." + i + ".goalsTeam2";
+            query2[name2] = getRandomNumber(5);
+
+            db.get('games').update({matchday: actualMatchDay}, {"$set": query1});
+            db.get('games').update({matchday: actualMatchDay}, {"$set": query2});
+
+        }
+        //update points per team
+        db.get('games').find({matchday: actualMatchDay}, function (e, games) {
+            var matchdayGames = games[0].games;
+            for (var i = 0; i < matchdayGames.length; i++)
+            {
+                if (matchdayGames[i].goalsTeam1 > matchdayGames[i].goalsTeam2)
+                {
+                    db.get('teams').update({teamname: matchdayGames[i].team1}, {"$inc": {points: 3}});
+                } else if (matchdayGames[i].goalsTeam1 < matchdayGames[i].goalsTeam2)
+                {
+                    db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": {points: 3}});
+                } else if (matchdayGames[i].goalsTeam1 === matchdayGames[i].goalsTeam2)
+                {
+                    db.get('teams').update({teamname: matchdayGames[i].team1}, {"$inc": {points: 1}});
+                    db.get('teams').update({teamname: matchdayGames[i].team2}, {"$inc": {points: 1}});
+                }
+            }
+        });
+
+        //update goals of players
+        db.get('games').find({matchday: actualMatchDay}, function (e, games) {
+            var matchdayGames = games[0].games;
+            for (var i = 0; i < matchdayGames.length; i++)
+            {
 
                 writeGoalsInDB(matchdayGames[i], db);
-        }
-    });
+            }
+        });
 
 
-    res.send("Erfolgreich geändert");
+        console.log("Erfolgreich geändert");
+        res.send("");
+    } else
+    {
+        console.log("Datum noch nicht erreicht");
+                res.send("");
+    }
+
+
 }
 
 
