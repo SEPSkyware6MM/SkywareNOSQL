@@ -44,7 +44,7 @@ function showteamdetails(shortname)
         {
             return b.score - a.score;
         });
-        $('#playerTableHeader').html('<img src="' + data[0].icon + '">' + " Spieler von " + data[0].teamname);
+        $('#playerTableHeader').html('<img src="' + data[0].icon + '" width="25" height="25">' + " Spieler von " + data[0].teamname);
         var tableContent = '';
         //Clear the table before injecting the new players
         $('#playertable table tbody').html(tableContent);
@@ -91,8 +91,8 @@ function populateTable(searchedleague) {
         // For each item in our JSON, add a table row and cells to the content string
         $.each(teamsOrdered, function () {
             tableContent += '<tr>';
-            tableContent += '<td><img src="' + this.icon + '"></td>';
-            tableContent += '<td onclick=showteamdetails(' + "'" + this.shortname + "'" + ')>' + this.teamname + '</td>';
+            tableContent += '<td><img src="' + this.icon + '"  width="25" height="25"></td>';
+            tableContent += '<td onclick=showteamdetails(' + "'" + this.shortname + "'" + ')><a href="#">' + this.teamname + '</a></td>';
             tableContent += '<td>' + this.points + '</td>';
             tableContent += '</tr>';
         });
