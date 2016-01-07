@@ -58,6 +58,7 @@ router.get('/list', function (req, res) {
 //writes games to the db
 function fillDatabaseWithRandomGames(arrayWithTeams)
 {
+    
     var mongo = require('mongodb').MongoClient;
     mongo.connect('mongodb://localhost:27017/fussballApp', function (err, db) {
         console.log("Connected properly.");
@@ -137,11 +138,6 @@ function getGamesJson(arrayWithTeams, matchday, part)
 function getMatchdayGames(arrayWithTeams, matchday, part)
 {
     var jsonArr = [];
-    if (matchday === 1 && part === 1)
-    {
-        dateOfMatchdayFirstHalf = new Date(2015, 7, 15, 15, 30);
-        dateOfMatchdaySecondHalf = new Date(2016, 1, 23, 15, 30);
-    }
     var n = arrayWithTeams.length - 1;
 
 
@@ -236,7 +232,14 @@ router.put('/simulate', function (req, res) {
     var db = req.db;
     var collection = db.get('games');
     collection.find({}, {}, function (e, everyMatchdayGames) {
-        updateGames(everyMatchdayGames, req, res);
+        if(everyMatchdayGames.length !== 0)
+        {
+            updateGames(everyMatchdayGames, req, res);
+        }
+        else
+        {
+            console.log('Insert games first!');
+        }
     });
 });
 
@@ -340,7 +343,7 @@ function writeGoalsInDB(oneOfMatchdayGames, db)
             if (probability <= 1)
             {
                 var backfieldPlayers = getIndicesOfPosition("Verteidiger", players);
-                playerWithGoal = getRandomNumber(backfieldPlayers.length - 1);
+                playerWithGoal = getRandomNumber(backfieldPlayers.length );
                 var query = {};
                 var player = "players." + backfieldPlayers[playerWithGoal] + ".score";
                 query[player] = 1;
@@ -349,7 +352,7 @@ function writeGoalsInDB(oneOfMatchdayGames, db)
             } else if (probability <= 4)
             {
                 var midfieldPlayers = getIndicesOfPosition("Mittelfeld", players);
-                playerWithGoal = getRandomNumber(midfieldPlayers.length - 1);
+                playerWithGoal = getRandomNumber(midfieldPlayers.length);
                 var query = {};
                 var player = "players." + midfieldPlayers[playerWithGoal] + ".score";
                 query[player] = 1;
@@ -357,7 +360,7 @@ function writeGoalsInDB(oneOfMatchdayGames, db)
             } else
             {
                 var forwardPlayers = getIndicesOfPosition("Stürmer", players);
-                playerWithGoal = getRandomNumber(forwardPlayers.length - 1);
+                playerWithGoal = getRandomNumber(forwardPlayers.length);
                 var query = {};
                 var player = "players." + forwardPlayers[playerWithGoal] + ".score";
                 query[player] = 1;
@@ -376,7 +379,7 @@ function writeGoalsInDB(oneOfMatchdayGames, db)
             if (probability <= 1)
             {
                 var backfieldPlayers = getIndicesOfPosition("Verteidiger", players);
-                playerWithGoal = getRandomNumber(backfieldPlayers.length - 1);
+                playerWithGoal = getRandomNumber(backfieldPlayers.length);
                 var query = {};
                 var player = "players." + backfieldPlayers[playerWithGoal] + ".score";
                 query[player] = 1;
@@ -385,7 +388,7 @@ function writeGoalsInDB(oneOfMatchdayGames, db)
             } else if (probability <= 4)
             {
                 var midfieldPlayers = getIndicesOfPosition("Mittelfeld", players);
-                playerWithGoal = getRandomNumber(midfieldPlayers.length - 1);
+                playerWithGoal = getRandomNumber(midfieldPlayers.length);
                 var query = {};
                 var player = "players." + midfieldPlayers[playerWithGoal] + ".score";
                 query[player] = 1;
@@ -393,7 +396,7 @@ function writeGoalsInDB(oneOfMatchdayGames, db)
             } else
             {
                 var forwardPlayers = getIndicesOfPosition("Stürmer", players);
-                playerWithGoal = getRandomNumber(forwardPlayers.length - 1);
+                playerWithGoal = getRandomNumber(forwardPlayers.length);
                 var query = {};
                 var player = "players." + forwardPlayers[playerWithGoal] + ".score";
                 query[player] = 1;
@@ -472,7 +475,7 @@ function updateAllPassedGames()
 }
 
 //check every hour if an game passed and results should be generated
-setInterval(updateAllPassedGames, 360000);
+setInterval(updateAllPassedGames, 3600000);
 
 
 module.exports = router;
