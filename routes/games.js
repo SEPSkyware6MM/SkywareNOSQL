@@ -29,8 +29,19 @@ router.delete('/', function (req, res, next) {
 router.put('/write/fillDB', function (req, res) {
     var db = req.db;
     var collection = db.get('teams');
-    collection.find({}, function (err, teams) {
-        fillDatabaseWithRandomGames(teams);
+    var gamesCollection = db.get('games');
+    gamesCollection.find({}, function(err, games){
+        if(games.length === 0){
+            collection.find({}, function (err, teams) {
+                if(teams.length !== 0){
+                    fillDatabaseWithRandomGames(teams);
+                }else{
+                    console.log('Insert teams first!');
+                }
+            });   
+        }else{
+            console.log('Games were already generated!');
+        }
     });
     res.send("DB erfolgreich gefüllt");
 });

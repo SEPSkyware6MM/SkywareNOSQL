@@ -48,8 +48,16 @@ router.get('/:shortname', function (req, res) {
 
 // Database 1
 router.put('/write/fillDB', function (req, res) {
-    getBundesliga(394, 1);
-    getBundesliga(395, 2);
+    var db = req.db;
+    var collection = db.get('teams');
+    collection.find({}, function (err, teams) {
+        if(teams.length === 0){
+            getBundesliga(394, 1);
+            getBundesliga(395, 2);
+        }else{
+            console.log('Teams were already generated!');
+        }
+    });     
 });
 
 //394: 1st bundesliga
