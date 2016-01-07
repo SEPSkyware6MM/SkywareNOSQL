@@ -44,6 +44,7 @@ router.get('/list', function (req, res) {
     });
 });
 
+//writes games to the db
 function fillDatabaseWithRandomGames(arrayWithTeams)
 {
     var mongo = require('mongodb').MongoClient;
@@ -213,6 +214,7 @@ function getMatchdayGames(arrayWithTeams, matchday, part)
     return jsonArr;
 }
 
+//returns a random number between 0 and max(including both)
 function getRandomNumber(max)
 {
     return Math.floor((Math.random() * max));
@@ -227,6 +229,7 @@ router.put('/simulate', function (req, res) {
     });
 });
 
+//updates the games of the first unplayed matchday if its date passed
 function updateGames(everyMatchdayGames, req, res)
 {
     var gamesOrderedByMatchday = everyMatchdayGames.sort(function (a, b)
@@ -310,7 +313,7 @@ function updateGames(everyMatchdayGames, req, res)
 
 }
 
-
+//generate a more realistic way of giving goals to players and write them into the db
 function writeGoalsInDB(oneOfMatchdayGames, db)
 {
     var game = oneOfMatchdayGames;
@@ -389,7 +392,7 @@ function writeGoalsInDB(oneOfMatchdayGames, db)
     }
 }
 
-
+//returns the indices of the players in 'players' with the position 'position'
 function getIndicesOfPosition(position, players)
 {
     var indicesOfPosition = [];

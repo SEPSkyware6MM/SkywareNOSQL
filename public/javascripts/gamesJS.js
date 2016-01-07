@@ -10,6 +10,7 @@ $(document).ready(function() {
     populateTable();
 });
 
+//populates the table of games on the page
 function populateTable()
 {
         $.ajax({

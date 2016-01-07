@@ -13,6 +13,7 @@ $(document).ready(function () {
     makeTableSortable("#playerTableSort");
 });
 
+//sorting of the tables
 function makeTableSortable(tablename)
 {
     $(tablename +  ' .sortableHeader').click(function () {
@@ -39,7 +40,7 @@ function makeTableSortable(tablename)
     }
 }
 
-
+//show playertable of the selected team
 function showteamdetails(shortname)
 {
     $.ajax({

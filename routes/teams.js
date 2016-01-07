@@ -81,6 +81,7 @@ function getBundesliga(apiLeagueCode, ourLeagueCode) {
     });
 }
 
+//Generate position and write team with players to db
 function insertTeam(name, shortname, icon, link, city, ourLeagueCode) {
     var jsonArr;
     var firstPartOfLink = link.split('/')[2];
