@@ -27,6 +27,9 @@ var db = monk('localhost:27017/fussballApp');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.set('port', process.env.PORT || 3000);
+app.listen(app.get('port'));
+
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/images/Skyware6logo.png'));
 app.use(logger('dev'));
@@ -77,6 +80,8 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+
 
 
 module.exports = app;
