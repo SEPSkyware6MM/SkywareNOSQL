@@ -406,4 +406,62 @@ function getIndicesOfPosition(position, players)
     return indicesOfPosition;
 }
 
+//will be called by a timer so it will be automatically
+function updateAllPassedGames()
+{
+    var db = require('monk')('mongodb://localhost:27017/fussballApp');
+    var gamesCollection = db.get('games');
+    gamesCollection.find().then(function(games){
+        //check every matchday
+        for(var i = 0; i < games.length; i++){
+            //date already passed
+            if(new Date(games[i].games[0].date) < new Date() && games[i].played === 0){
+                db.get('games').update({matchday: games[i].matchday}, {"$set": {played: 1}});
+                //update Matches with random results
+                for (var j = 0; j < games[i].games.length; j++)
+                {
+                    var query1 = {};
+                    var name1 = "games." + j + ".goalsTeam1";
+                    games[i].games[j].goalsTeam1 = getRandomNumber(5);
+                    query1[name1] = games[i].games[j].goalsTeam1;
+
+                    var query2 = {};
+                    var name2 = "games." + j + ".goalsTeam2";
+                    games[i].games[j].goalsTeam2 = getRandomNumber(5);
+                    query2[name2] = games[i].games[j].goalsTeam2;
+
+                    db.get('games').update({matchday: games[i].matchday}, {"$set": query1});
+                    db.get('games').update({matchday: games[i].matchday}, {"$set": query2});
+                }
+                //update points per team
+                var matchdayGames = games[i].games;
+                for (var j = 0; j < matchdayGames.length; j++)
+                {
+                    if (matchdayGames[j].goalsTeam1 > matchdayGames[j].goalsTeam2)
+                    {
+                        db.get('teams').update({teamname: matchdayGames[j].team1}, {"$inc": {points: 3}});
+                    } else if (matchdayGames[j].goalsTeam1 < matchdayGames[j].goalsTeam2)
+                    {
+                        db.get('teams').update({teamname: matchdayGames[j].team2}, {"$inc": {points: 3}});
+                    } else if (matchdayGames[j].goalsTeam1 === matchdayGames[j].goalsTeam2)
+                    {
+                        db.get('teams').update({teamname: matchdayGames[j].team1}, {"$inc": {points: 1}});
+                        db.get('teams').update({teamname: matchdayGames[j].team2}, {"$inc": {points: 1}});
+                    }
+                }
+
+                //update goals of players
+                for (var j = 0; j < matchdayGames.length; j++)
+                {
+                    writeGoalsInDB(matchdayGames[j], db);
+                }
+            }
+        }
+    });
+}
+
+//check every hour if an game passed and results should be generated
+setInterval(updateAllPassedGames, 360000);
+
+
 module.exports = router;
