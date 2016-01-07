@@ -1,3 +1,11 @@
+/*
+ * Project: 
+ * Skyware NOSQL FussballProjekt
+ * Autoren:
+ * Marc Misoch
+ * Chris Denneberg
+ */
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');

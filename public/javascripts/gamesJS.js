@@ -1,3 +1,11 @@
+/*
+ * Project: 
+ * Skyware NOSQL FussballProjekt
+ * Autoren:
+ * Marc Misoch
+ * Chris Denneberg
+ */
+
 $(document).ready(function() {
     populateTable();
 });

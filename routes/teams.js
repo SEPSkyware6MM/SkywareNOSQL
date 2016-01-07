@@ -1,7 +1,14 @@
+/*
+ * Project: 
+ * Skyware NOSQL FussballProjekt
+ * Autoren:
+ * Marc Misoch
+ * Chris Denneberg
+ */
+
 var express = require('express');
 var router = express.Router();
 var http = require('http');
-var $ = require('jquery');
 
 
 //GET home page

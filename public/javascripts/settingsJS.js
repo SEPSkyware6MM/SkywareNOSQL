@@ -1,3 +1,11 @@
+/*
+ * Project: 
+ * Skyware NOSQL FussballProjekt
+ * Autoren:
+ * Marc Misoch
+ * Chris Denneberg
+ */
+
 function FillDatabase(whatToFill){
     $.ajax({
         url: whatToFill + '/write/fillDB',
